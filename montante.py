@@ -41,5 +41,6 @@ if __name__=="__main__":
         # 3.1 - num = numVariables()
         # 3.3 - matriz, identidad = inicializar(num)
         # 3.3 - montante(num, matriz, identidad)
+        # 3.4 - sn = continuar()
     # 4 - Fin
     pass
