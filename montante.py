@@ -8,7 +8,11 @@ def numVariables()->int:
 # Preguntar al usuario si desea seguir en el programa o salir
 def continuar(): 
     # Puede regresar una cadena o un booleano
-    pass
+    sn = ""
+    sn = input("Desea ingresar otro sistema de ecuaciones? S/n: ").lower()
+    while sn != "s" and sn != "n": 
+        sn = input("S/n: ").lower()
+    return sn
 
 def imprimirMatriz(matriz: list): 
     # Solamente imprime la matriz, dandole formato para que sea legible
@@ -37,10 +41,13 @@ if __name__=="__main__":
     #Llamada al programa, lo equivalente a la función main() en otros lenguajes
     # 1 - Inicio
     # 2 - Inicializar variables
+    sn = "s"
     # 3 - Mientras sn == "s"
+    while sn == "s": 
         # 3.1 - num = numVariables()
         # 3.3 - matriz, identidad = inicializar(num)
         # 3.3 - montante(num, matriz, identidad)
         # 3.4 - sn = continuar()
+        sn = continuar()
     # 4 - Fin
     pass
