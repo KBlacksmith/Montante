@@ -2,8 +2,17 @@
 
 #Validar que regrese un entero positivo
 def numVariables()->int: 
-    #return num
-    pass
+    while True: 
+        try: 
+            num = int(input("¿Cuántas variables tiene el sistema de ecuaciones (0 para salir)?: "))
+            pass
+        except ValueError: 
+            print("Error, debe ingresar un número entero positivo")
+        else: 
+            if num >= 0: 
+                return num
+            else: 
+                print("El número debe ser mayor o igual a 0")
 
 # Preguntar al usuario si desea seguir en el programa o salir
 def continuar()->str: 
@@ -89,7 +98,10 @@ def montante(matriz: "list[list]")->list:
         #No hay necesidad de una variable "pivote actual" pues es el elemento ubicado en k,k
         print("Pivote actual: "+str(matriz[k][k]))
         print("\n=>\n")
+        print("Matriz: ")
         print(matriz)
+        print("Adjunta: ")
+        print(adjunta)
         #imprimirMatriz(matriz)
     print("\nDeterminante: "+str(matriz[n-1][n-1]*signo))
     for i in range(n): 
@@ -104,13 +116,14 @@ def montante(matriz: "list[list]")->list:
 if __name__=="__main__": 
     # Inicializar variables
     cont = True
-    # Mientras sn == "s"
     while cont: 
-        # num = numVariables()
-        # matriz, identidad = inicializar(num)
-        # montante(num, matriz, identidad)
-        montante([[3, 6, -1], [7, -1, 2], [-2, -1, -1]])
-        # - sn = continuar()
+        #Decidir tamaño de la matriz
+        num = numVariables()
+        if num > 0: 
+            # matriz, identidad = inicializar(num)
+            # montante(num, matriz, identidad)
+            montante([[3, 6, -1], [7, -1, 2], [-2, -1, -1]])
+        #Preguntar si desea continuar
         cont = continuar()
     # Fin
     pass
