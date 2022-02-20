@@ -31,6 +31,26 @@ def imprimirMatrizYAdjunta(matriz: list, adj: list):
     # Similar a la anterior, pero ahora da formato para imprimir una matriz y su matriz adjunta
     pass
 
+def validarInt(x_i)->int: 
+    while True: 
+        try: 
+            coef = int(input("Coeficiente de x"+str(x_i)+": "))
+        except ValueError: 
+            print("Entrada inválida, ingrese un número entero como coeficiente")
+        else: 
+            return coef
+
+def validarFloat(ecuacion: str)->float: 
+    while True: 
+        try: 
+            val = float(input(ecuacion))
+            pass
+        except: 
+            print("Entrada inválida, ingrese un número entero o flotante")
+            pass
+        else: 
+            return val
+
 # Generar la matriz correspondiente al problema, preguntando por los coeficientes
 #Generar la matriz identidad asociada a la matriz del problema
 def inicializar(num: int)->tuple:
@@ -120,10 +140,9 @@ if __name__=="__main__":
         #Decidir tamaño de la matriz
         num = numVariables()
         if num > 0: 
-            # matriz, identidad = inicializar(num)
-            # montante(num, matriz, identidad)
+            # matriz, vector = inicializar(num)
+            # montante(matriz)
             montante([[3, 6, -1], [7, -1, 2], [-2, -1, -1]])
         #Preguntar si desea continuar
         cont = continuar()
     # Fin
-    pass
