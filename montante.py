@@ -5,7 +5,6 @@ def numVariables()->int:
     while True: 
         try: 
             num = int(input("¿Cuántas variables tiene el sistema de ecuaciones (0 para salir)?: "))
-            pass
         except ValueError: 
             print("Error, debe ingresar un número entero positivo")
         else: 
@@ -21,16 +20,10 @@ def continuar()->str:
     sn = input("Desea ingresar otro sistema de ecuaciones? S/n: ").lower()
     while sn != "s" and sn != "n": 
         sn = input("S/n: ").lower()
+    #Al devolver una comparación, regresa un booleano
     return sn == "s"
 
-def imprimirMatriz(matriz: list): 
-    # Solamente imprime la matriz, dandole formato para que sea legible
-    pass
-
-def imprimirMatrizYAdjunta(matriz: list, adj: list): 
-    # Similar a la anterior, pero ahora da formato para imprimir una matriz y su matriz adjunta
-    pass
-
+#Validar que el coeficiente ingresado sea entero
 def validarInt(x_i)->int: 
     while True: 
         try: 
@@ -40,23 +33,44 @@ def validarInt(x_i)->int:
         else: 
             return coef
 
+#Validar que el vector de términos independientes sea un número flotante
 def validarFloat(ecuacion: str)->float: 
     while True: 
         try: 
             val = float(input(ecuacion))
-            pass
         except: 
             print("Entrada inválida, ingrese un número entero o flotante")
-            pass
         else: 
             return val
 
+def imprimirMatriz(matriz: list): 
+    # Solamente imprime la matriz, dandole formato para que sea legible
+    pass
+
+def imprimirMatrizYAdjunta(matriz: list, adj: list): 
+    # Similar a la anterior, pero ahora da formato para imprimir una matriz y su matriz adjunta
+    pass
+
 # Generar la matriz correspondiente al problema, preguntando por los coeficientes
 #Generar la matriz identidad asociada a la matriz del problema
-def inicializar(num: int)->tuple:
+def ingresarEcuaciones(num: int)->tuple:
+    #Inicializar la matriz cuadrada
+    matriz = [[0 for j in range(num)] for i in range(num)]
+    #Inicializar el vector
+    vector = [0 for i in range(num)]
+    
+    for i in range(num): 
+        ecuacion = ""
+        print("Ecuación #"+str(i+1))
+        for j in range(num): 
+            matriz[i][j] = validarInt(j+1)
+            if j > 0 and matriz[i][j] >= 0: 
+                ecuacion += "+"
+            ecuacion += str(matriz[i][j])+"x"+str(j+1)+" "
+        ecuacion += "= "
+        vector[i] = validarFloat(ecuacion)
     #Python puede regresar una tupla que puede ser "desempacada" al recibirla 
-    #return matriz, vector
-    pass
+    return matriz, vector
 
 # Método principal
 # Decidir si será un método recursivo o solamente iterativo
@@ -123,14 +137,26 @@ def montante(matriz: "list[list]")->list:
         print("Adjunta: ")
         print(adjunta)
         #imprimirMatriz(matriz)
-    print("\nDeterminante: "+str(matriz[n-1][n-1]*signo))
+    print("-"*20)
+    print("Determinante: "+str(matriz[n-1][n-1]*signo))
     for i in range(n): 
         for j in range(n): 
             adjunta[i][j] = adjunta[i][j]/matriz[n-1][n-1]
+    print("-"*20)
     print("Matriz inversa: ")
     #imprimirMatriz(adjunta)
     print(adjunta)
     return adjunta
+
+#Con la matriz inversa ya podemos calcular los valores de las variables
+def calcularVariables(inversa: list, vector: list): 
+    print("-"*20)
+    for i in range(len(vector)): 
+        x = 0
+        for j in range(len(vector)): 
+            x += vector[j]*inversa[i][j]
+        print("x"+str(i+1)+" = "+str(x))
+    print("-"*20)
 
 #Llamada al programa, lo equivalente a la función main() en otros lenguajes
 if __name__=="__main__": 
@@ -140,9 +166,13 @@ if __name__=="__main__":
         #Decidir tamaño de la matriz
         num = numVariables()
         if num > 0: 
-            # matriz, vector = inicializar(num)
-            # montante(matriz)
-            montante([[3, 6, -1], [7, -1, 2], [-2, -1, -1]])
+            #Desempacamos tuplas para recibir dos componentes de la respuesta
+            matriz, vector = ingresarEcuaciones(num)
+            inversa = montante(matriz)
+            if len(inversa) > 0: 
+                calcularVariables(inversa, vector)
+            else: 
+                print("No se pudo resolver el sistema de ecuaciones")
         #Preguntar si desea continuar
         cont = continuar()
     # Fin
