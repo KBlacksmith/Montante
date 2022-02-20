@@ -43,13 +43,26 @@ def validarFloat(ecuacion: str)->float:
         else: 
             return val
 
-def imprimirMatriz(matriz: list): 
-    # Solamente imprime la matriz, dandole formato para que sea legible
-    pass
+def imprimirMatriz(matriz: list):
+    for vec in matriz: 
+        renglon = "|"
+        for num in vec: 
+            renglon +=" "+str(num)+" "
+        renglon += "|"
+        print(renglon)
+    print("")
 
 def imprimirMatrizYAdjunta(matriz: list, adj: list): 
-    # Similar a la anterior, pero ahora da formato para imprimir una matriz y su matriz adjunta
-    pass
+    n = len(matriz)
+    for i in range(n): 
+        renglon = "|"
+        for j in range(n): 
+            renglon +=" "+str(matriz[i][j])+" "
+        renglon += "|"
+        for j in range(n): 
+            renglon += " "+str(adj[i][j])+" "
+        renglon += "|"
+        print(renglon)
 
 # Generar la matriz correspondiente al problema, preguntando por los coeficientes
 #Generar la matriz identidad asociada a la matriz del problema
@@ -61,7 +74,7 @@ def ingresarEcuaciones(num: int)->tuple:
     
     for i in range(num): 
         ecuacion = ""
-        print("Ecuación #"+str(i+1))
+        print("\nEcuación #"+str(i+1))
         for j in range(num): 
             matriz[i][j] = validarInt(j+1)
             if j > 0 and matriz[i][j] >= 0: 
@@ -69,6 +82,7 @@ def ingresarEcuaciones(num: int)->tuple:
             ecuacion += str(matriz[i][j])+"x"+str(j+1)+" "
         ecuacion += "= "
         vector[i] = validarFloat(ecuacion)
+        print("-"*20)
     #Python puede regresar una tupla que puede ser "desempacada" al recibirla 
     return matriz, vector
 
@@ -76,8 +90,6 @@ def ingresarEcuaciones(num: int)->tuple:
 # Decidir si será un método recursivo o solamente iterativo
 # Revisar excepciones. 
 def montante(matriz: "list[list]")->list:
-    #imprimirMatriz(matriz)
-    print(matriz)
     #Almacenar el tamaño de la matriz cuadrada
     n = len(matriz)
     #Inicializar la matriz adjunta como una matriz identidad de tamaño nXn
@@ -91,6 +103,7 @@ def montante(matriz: "list[list]")->list:
     #Con la variable "signo" podemos llevar el control para obtener el determinante de la matriz original
     signo = 1
     #Ciclo para controlar cuantas veces se debe de realizar el proceso
+    imprimirMatrizYAdjunta(matriz, adjunta)
     for k in range(n):
         #Verifica que el pivote no sea 0, pues causaría problemas en la siguiente iteracion
         if matriz[k][k] == 0: 
@@ -132,11 +145,7 @@ def montante(matriz: "list[list]")->list:
         #No hay necesidad de una variable "pivote actual" pues es el elemento ubicado en k,k
         print("Pivote actual: "+str(matriz[k][k]))
         print("\n=>\n")
-        print("Matriz: ")
-        print(matriz)
-        print("Adjunta: ")
-        print(adjunta)
-        #imprimirMatriz(matriz)
+        imprimirMatrizYAdjunta(matriz, adjunta)
     print("-"*20)
     print("Determinante: "+str(matriz[n-1][n-1]*signo))
     for i in range(n): 
@@ -144,8 +153,7 @@ def montante(matriz: "list[list]")->list:
             adjunta[i][j] = adjunta[i][j]/matriz[n-1][n-1]
     print("-"*20)
     print("Matriz inversa: ")
-    #imprimirMatriz(adjunta)
-    print(adjunta)
+    imprimirMatriz(adjunta)
     return adjunta
 
 #Con la matriz inversa ya podemos calcular los valores de las variables
