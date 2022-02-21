@@ -8,10 +8,10 @@ def numVariables()->int:
         except ValueError: 
             print("Error, debe ingresar un número entero positivo")
         else: 
-            if num >= 0: 
+            if num > 0: 
                 return num
             else: 
-                print("El número debe ser mayor o igual a 0")
+                print("El número de variables debe ser mayor a 0")
 
 # Preguntar al usuario si desea seguir en el programa o salir
 def continuar()->str: 
@@ -105,10 +105,15 @@ def montante(matriz: "list[list]")->list:
     #Ciclo para controlar cuantas veces se debe de realizar el proceso
     imprimirMatrizYAdjunta(matriz, adjunta)
     for k in range(n):
+        print("\nPivote anterior: "+str(pivote_ant))
+        #No hay necesidad de una variable "pivote actual" pues es el elemento ubicado en k,k
+        print("Pivote actual: "+str(matriz[k][k]))
         #Verifica que el pivote no sea 0, pues causaría problemas en la siguiente iteracion
         if matriz[k][k] == 0: 
             for i in range(k+1, n): 
                 if matriz[i][k] != 0:
+                    print("\n=>")
+                    print("Cambio de renglón\n\n=>\n")
                     #Cuando se encuentra un renglón que cumpla con la confición deseada, se intercambian sus contenidos
                     aux = matriz[k].copy()
                     matriz[k] = matriz[i].copy()
@@ -116,6 +121,7 @@ def montante(matriz: "list[list]")->list:
                     aux = adjunta[k].copy()
                     adjunta[k] = adjunta[i].copy()
                     adjunta[i] = aux.copy()
+                    imprimirMatrizYAdjunta(matriz, adjunta)
                     del aux
                     #Actualizamos el signo del determinante
                     signo *=-1
@@ -140,10 +146,7 @@ def montante(matriz: "list[list]")->list:
             for j in range(n): 
                 matriz[i][j] = nueva_m[i][j]
                 adjunta[i][j] = nueva_adj[i][j]
-        print("\nPivote anterior: "+str(pivote_ant))
         pivote_ant = matriz[k][k]
-        #No hay necesidad de una variable "pivote actual" pues es el elemento ubicado en k,k
-        print("Pivote actual: "+str(matriz[k][k]))
         print("\n=>\n")
         imprimirMatrizYAdjunta(matriz, adjunta)
     print("-"*20)
@@ -168,19 +171,19 @@ def calcularVariables(inversa: list, vector: list):
 
 #Llamada al programa, lo equivalente a la función main() en otros lenguajes
 if __name__=="__main__": 
+    print("Método Bareiss-Montante")
     # Inicializar variables
     cont = True
     while cont: 
         #Decidir tamaño de la matriz
         num = numVariables()
-        if num > 0: 
-            #Desempacamos tuplas para recibir dos componentes de la respuesta
-            matriz, vector = ingresarEcuaciones(num)
-            inversa = montante(matriz)
-            if len(inversa) > 0: 
-                calcularVariables(inversa, vector)
-            else: 
-                print("No se pudo resolver el sistema de ecuaciones")
+        #Desempacamos tuplas para recibir dos componentes de la respuesta
+        matriz, vector = ingresarEcuaciones(num)
+        inversa = montante(matriz)
+        if len(inversa) > 0: 
+            calcularVariables(inversa, vector)
+        else: 
+            print("No se pudo resolver el sistema de ecuaciones, porque el pivote actual es igual a 0")
         #Preguntar si desea continuar
         cont = continuar()
     # Fin
