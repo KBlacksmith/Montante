@@ -1,0 +1,11 @@
+¿Por qué utilizamos Python3?
+1.- Sintaxis muy legible que facilita el desarrollo
+1.- Es un lenguaje interpretado, por lo que no requiere ser compilado antes de ejecutar un script, ni de adaptarlo a una plataforma en específico
+2.- Es un lenguaje de tipado dinámico, por lo que no es estrícto al asignar valores a una variable. 
+3.- Se pueden regresar múltiples valores de una función sin necesidad de un contenedor o estructura (desempaquetado de tuplas)
+4.- Utilizar contenedores (ej: arreglos) como parámetros no requiere utilizar punteros, ya que todas las objetos se manejan por referencia. 
+
+Desventajas: 
+1.- El tipado dinámico vuelve el programa propenso a errores de diseño
+2.- Los números flotantes tienen solo tanta precisión, por lo que en ocasiones puede no llegarse a la respuesta correcta, aunque sí a una muy cercana (Ej: 0.1+0.2 != 0.3)
+3.- Para programas más pesado, no es tan eficiente en memoria ni en rendimiento como otros lenguajes como C++

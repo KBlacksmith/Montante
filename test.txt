@@ -1,0 +1,147 @@
+def numVariables()->int: 
+    while True: 
+        try: 
+            num = int(input("¿Cuántas variables tiene el sistema de ecuaciones (0 para salir)?: "))
+        except ValueError: 
+            print("Error, debe ingresar un número entero positivo")
+        else: 
+            if num >= 0: 
+                return num
+            else: 
+                print("El número debe ser mayor o igual a 0")
+
+def continuar()->str: 
+    sn = ""
+    sn = input("Desea ingresar otro sistema de ecuaciones? S/n: ").lower()
+    while sn != "s" and sn != "n": 
+        sn = input("S/n: ").lower()
+    return sn == "s"
+
+def validarInt(x_i)->int: 
+    while True: 
+        try: 
+            coef = int(input("Coeficiente de x"+str(x_i)+": "))
+        except ValueError: 
+            print("Entrada inválida, ingrese un número entero como coeficiente")
+        else: 
+            return coef
+
+def validarFloat(ecuacion: str)->float: 
+    while True: 
+        try: 
+            val = float(input(ecuacion))
+        except: 
+            print("Entrada inválida, ingrese un número entero o flotante")
+        else: 
+            return val
+
+def imprimirMatriz(matriz: list):
+    for vec in matriz: 
+        renglon = "|"
+        for num in vec: 
+            renglon +=" "+str(num)+" "
+        renglon += "|"
+        print(renglon)
+    print("")
+
+def imprimirMatrizYAdjunta(matriz: list, adj: list): 
+    n = len(matriz)
+    for i in range(n): 
+        renglon = "|"
+        for j in range(n): 
+            renglon +=" "+str(matriz[i][j])+" "
+        renglon += "|"
+        for j in range(n): 
+            renglon += " "+str(adj[i][j])+" "
+        renglon += "|"
+        print(renglon)
+
+def ingresarEcuaciones(num: int)->tuple:
+    matriz = [[0 for j in range(num)] for i in range(num)]
+    vector = [0 for i in range(num)]
+    
+    for i in range(num): 
+        ecuacion = ""
+        print("\nEcuación #"+str(i+1))
+        for j in range(num): 
+            matriz[i][j] = validarInt(j+1)
+            if j > 0 and matriz[i][j] >= 0: 
+                ecuacion += "+"
+            ecuacion += str(matriz[i][j])+"x"+str(j+1)+" "
+        ecuacion += "= "
+        vector[i] = validarFloat(ecuacion)
+        print("-"*20)
+    return matriz, vector
+
+def montante(matriz: "list[list]")->list:
+    n = len(matriz)
+    adjunta = [[0 if i!=j else 1 for i in range(n)] for j in range(n)]
+    pivote_ant = 1
+    nueva_m = [["x" for i in range(n)] for j in range(n)]
+    nueva_adj = [["x" for i in range(n)] for j in range(n)]
+    signo = 1
+    imprimirMatrizYAdjunta(matriz, adjunta)
+    for k in range(n):
+        if matriz[k][k] == 0: 
+            for i in range(k+1, n): 
+                if matriz[i][k] != 0:
+                    aux = matriz[k].copy()
+                    matriz[k] = matriz[i].copy()
+                    matriz[i] = aux.copy()
+                    aux = adjunta[k].copy()
+                    adjunta[k] = adjunta[i].copy()
+                    adjunta[i] = aux.copy()
+                    del aux
+                    signo *=-1
+                    break
+            else: 
+                if matriz[k][k] == 0: 
+                    return []
+        for i in range(n): 
+            for j in range(n): 
+                if i == k: 
+                    nueva_m[i][j] = matriz[i][j]
+                    nueva_adj[i][j] = adjunta[i][j]
+                else:
+                    nueva_m[i][j] = (matriz[k][k]*matriz[i][j] - matriz[i][k]*matriz[k][j])/pivote_ant
+                    nueva_adj[i][j] = (adjunta[i][j]*matriz[k][k] - matriz[i][k]*adjunta[k][j])/pivote_ant
+        for i in range(n): 
+            for j in range(n): 
+                matriz[i][j] = nueva_m[i][j]
+                adjunta[i][j] = nueva_adj[i][j]
+        print("\nPivote anterior: "+str(pivote_ant))
+        pivote_ant = matriz[k][k]
+        print("Pivote actual: "+str(matriz[k][k]))
+        print("\n=>\n")
+        imprimirMatrizYAdjunta(matriz, adjunta)
+    print("-"*20)
+    print("Determinante: "+str(matriz[n-1][n-1]*signo))
+    for i in range(n): 
+        for j in range(n): 
+            adjunta[i][j] = adjunta[i][j]/matriz[n-1][n-1]
+    print("-"*20)
+    print("Matriz inversa: ")
+    imprimirMatriz(adjunta)
+    return adjunta
+
+def calcularVariables(inversa: list, vector: list): 
+    print("-"*20)
+    for i in range(len(vector)): 
+        x = 0
+        for j in range(len(vector)): 
+            x += vector[j]*inversa[i][j]
+        print("x"+str(i+1)+" = "+str(x))
+    print("-"*20)
+
+if __name__=="__main__": 
+    cont = True
+    while cont: 
+        num = numVariables()
+        if num > 0: 
+            matriz, vector = ingresarEcuaciones(num)
+            inversa = montante(matriz)
+            if len(inversa) > 0: 
+                calcularVariables(inversa, vector)
+            else: 
+                print("No se pudo resolver el sistema de ecuaciones")
+        cont = continuar()
